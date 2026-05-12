@@ -588,6 +588,8 @@ MonoBehaviour:
   inputManager: {fileID: 380052946}
   MoveSpeed: 5
   JumpStrength: 10
+  raycastStartDown: 0.9
+  raycastDistance: 0.2
 --- !u!1 &816555281
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,6 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   _currentState: 2
+  inputManager: {fileID: 380052946}
 --- !u!4 &816555283
 Transform:
   m_ObjectHideFlags: 0
@@ -644,7 +647,7 @@ GameObject:
   - component: {fileID: 1576453226}
   - component: {fileID: 1576453225}
   - component: {fileID: 1576453224}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}

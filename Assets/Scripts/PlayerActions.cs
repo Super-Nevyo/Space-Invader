@@ -5,6 +5,8 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private InputManager inputManager;
     [SerializeField] private float MoveSpeed;
     [SerializeField] private float JumpStrength;
+    [SerializeField] private float raycastStartDown;
+    [SerializeField] private float raycastDistance;
     private Rigidbody2D rb;
 
     private float _moveDirection;
@@ -36,7 +38,10 @@ public class PlayerActions : MonoBehaviour
 
     private void HandleJump()
     {
-        rb.linearVelocityY += JumpStrength;
+        if (IsGrounded())
+        {
+            rb.linearVelocityY += JumpStrength;
+        }
     }
     private void HandleMove(float direction)
     {
@@ -45,5 +50,10 @@ public class PlayerActions : MonoBehaviour
     private void HandleShoot()
     {
 
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics2D.Raycast(transform.position + raycastStartDown * Vector3.down, Vector2.down, raycastDistance, LayerMask.GetMask("Ground"));
     }
 }
