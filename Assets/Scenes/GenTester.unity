@@ -155,6 +155,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &333501786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 333501787}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &333501787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333501786}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 13.04, y: -2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2125329082}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &380052943
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,7 +439,7 @@ MonoBehaviour:
   - {fileID: 1634066591}
   _tempContainer: {fileID: 266082149}
   example1: {fileID: 468004168}
-  example2: {fileID: 80221225}
+  example2: {fileID: 333501786}
   example3: {fileID: 1634066591}
 --- !u!4 &556929655
 Transform:
@@ -908,7 +940,7 @@ MonoBehaviour:
   idleTime: 1
   idleVariation: 1
   wanderLeftPoint: {x: 10, y: 0}
-  wanderDistanceRight: 5
+  wanderDistanceRight: 20
   moveSpeed: 5
   alertTime: 1
   staggerTime: 0.5
@@ -980,12 +1012,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2125329079}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.04, y: -0.5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 333501787}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1164535068342938940
 PrefabInstance:
@@ -1172,4 +1204,4 @@ SceneRoots:
   - {fileID: 4475922492494598583}
   - {fileID: 1164535068342938940}
   - {fileID: 266082150}
-  - {fileID: 2125329082}
+  - {fileID: 333501787}
