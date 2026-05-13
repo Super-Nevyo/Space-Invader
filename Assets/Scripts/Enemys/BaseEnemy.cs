@@ -1,27 +1,29 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public abstract class BaseEnemy : MonoBehaviour
+public abstract class BaseEnemy : MonoBehaviour, IHittable
 {
 
-    protected int hitPoints;
-    [SerializeField] protected int maxHitPoints;
+    protected float hitPoints;
+    [SerializeField] protected float maxHitPoints;
     [SerializeField] protected float sightDistance;
     [SerializeField] protected float idleTime;
     [SerializeField] protected float idleVariation;
     [SerializeField] protected Vector2 wanderLeftPoint;
     [SerializeField] protected float wanderDistanceRight;
     [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float alertTime;
+    [SerializeField] protected float staggerTime;
+    [SerializeField] protected float attackTime;
     protected bool _isWaiting;
-
-    private Vector2 _wanderTarget;
+    private Vector2 _wanderTarget =  Vector2.zero;
     private EnemyState _currentState;
-    private GameObject _player;
+    protected GameObject _player;
 
     protected virtual void Awake()
     {
         _currentState = EnemyState.IDLE;
+        hitPoints = maxHitPoints;
     }
 
     protected void Start()
@@ -73,16 +75,16 @@ public abstract class BaseEnemy : MonoBehaviour
         {
             _wanderTarget = new Vector2(Random.Range(wanderLeftPoint.x, wanderLeftPoint.x + wanderDistanceRight), wanderLeftPoint.y);
         }
-        else if (Mathf.Abs(transform.position.x - _wanderTarget.x) < 0.2)
+        else if (Mathf.Abs(transform.position.x - _wanderTarget.x) > 0.2)
         {
             if (transform.position.x < _wanderTarget.x)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                //transform.localScale = new Vector3(-1, 1, 1);
                 transform.position += moveSpeed * Time.deltaTime * Vector3.right;
             }
             if (transform.position.x > _wanderTarget.x)
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                //transform.localScale = new Vector3(1, 1, 1);
                 transform.position += moveSpeed * Time.deltaTime * Vector3.left;
             }
         }
@@ -117,8 +119,16 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual bool IsPlayerSpottable()
     {
-        if (_player.transform.position.x - transform.position.x > sightDistance) return false;
+        if (Mathf.Abs(_player.transform.position.x - transform.position.x) > sightDistance) return false;
         return true;
+    }
+
+    public virtual void OnHit(float Damage)
+    {
+        hitPoints -= Damage;
+        StopAllCoroutines();
+        if (hitPoints <= 0) ChangeState(EnemyState.DYING);
+        else ChangeState(EnemyState.HIT);
     }
 
 }
