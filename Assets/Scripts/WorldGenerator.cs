@@ -3,62 +3,47 @@ using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
 {
-    private List<GameObject>[] _world = new List<GameObject>[5];
-    [SerializeField] private List<GameObject> _tempList;
+    private List<GameObject>[] _world;
     private int _chunkDistance = 1;
     private int _startDistance = -5;
     [SerializeField] private GameObject _tempContainer;
-    [SerializeField] private GameObject example1;
-    [SerializeField] private GameObject example2;
-    [SerializeField] private GameObject example3;
+    [SerializeField] private GameObject floor;
+    [SerializeField] private GameObject enemy;
+    [SerializeField] private GameObject obstacle;
 
 
-    private List<GameObject>[] _example = new List<GameObject>[5];
-    //{ new List<GameObject>(2) { example1, example2 },
-    //    new List<GameObject>(3) { example1, example2, example3 },
-    //    new List<GameObject>(1) { example1 },
-    //    new List<GameObject>(2) { example1, example3 },
-    //    new List<GameObject>(1) { example1 } };
-    private int[] _testArray = new int[3] { 1, 2, 3 };
-    private List<int> _testList = new List<int>(3) { 1, 2, 3 };
+    private List<GameObject>[] _startSet = new List<GameObject>[15];
+    private List<GameObject>[] _set1 = new List<GameObject>[5];
+    private List<GameObject>[] _set2 = new List<GameObject>[7];
+    private List<GameObject>[] _set3 = new List<GameObject>[3];
 
 
     private void Start()
     {
-        _example = new List<GameObject>[] { new List<GameObject>(2) { example1, example2 }, new List<GameObject>(3) { example1, example2, example3 }, new List<GameObject>(1) { example1 }, new List<GameObject>(2) { example1, example3 }, new List<GameObject>(1) { example1 } };
-        //_example[0] = new List<GameObject> { example1, example2 };
-        //_example[1] = new List<GameObject> { example1, example2, example3 };
-        //_example[2] = new List<GameObject> { example1 };
-        //_example[3] = new List<GameObject> { example1, example3 };
-        //_example[4] = new List<GameObject> { example1 };
-        for (int i = 0; i < _world.Length; i++)
+        _startSet = new List<GameObject>[] { new List<GameObject>(1) { floor}, new List<GameObject>(1) { floor}, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor } };
+        _set1 = new List<GameObject>[] { new List<GameObject>(1) { floor, enemy }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor, enemy }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor } };
+        _set2 = new List<GameObject>[] { new List<GameObject>(1) { floor, obstacle }, new List<GameObject>(1) { floor, enemy }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor, enemy }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor, obstacle } };
+        _set3 = new List<GameObject>[] { new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor }, new List<GameObject>(1) { floor } };
+        _world = _startSet;
+        SpawnObjects();
+        SpawnObjects();
+        for (int i = 0; i < 10; i++)
         {
-            _world[i] = _tempList;
-        }
-
-        SpawnObjects();
-        _tempList.RemoveAt(_tempList.Count-1);
-        for (int i = 0; i < _world.Length; i++)
-        {
-            _world[i] = _tempList;
-        }
-        SpawnObjects();
-        _tempList.RemoveAt(_tempList.Count-1);
-        for (int i = 0; i < _world.Length; i++)
-        {
-            _world[i] = _tempList;
-        }
-        SpawnObjects();
-        _world = _example;
-        SpawnObjects();
-        SpawnObjects();
-        SpawnObjects();
+            PickASetAndSpawn();
+                }
+    }
+    private void PickASetAndSpawn()
+    {
+        int i = Random.Range(0, 3);
+        if (i == 0) _world = _set1;
+        if (i == 1) _world = _set2;
+        if (i == 2) _world = _set3;
         SpawnObjects();
     }
 
     private void SpawnObjects()
     {
-        GameObject temp = Instantiate(_tempContainer);
+        GameObject temp = Instantiate(_tempContainer, new Vector2(_startDistance, -2), Quaternion.identity, null);
         for (int i = 0; i < _world.Length; ++i)
         {
             for (int j = 0; j < _world[i].Count; ++j)
