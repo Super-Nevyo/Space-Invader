@@ -15,10 +15,14 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     [SerializeField] protected float alertTime;
     [SerializeField] protected float staggerTime;
     [SerializeField] protected float attackTime;
+    [SerializeField] protected int damage;
     protected bool _isWaiting;
     private Vector2 _wanderTarget =  Vector2.zero;
     private EnemyState _currentState;
     protected GameObject _player;
+
+
+    [SerializeField] protected Animator animator;
 
     protected virtual void Awake()
     {
@@ -67,6 +71,7 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
         if (IsPlayerSpottable())
         {
             ChangeState(EnemyState.SPOTTED);
+            animator.SetBool("isIdle", false);
         }
     }
     protected virtual void WanderAction()
@@ -74,17 +79,18 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
         if (_wanderTarget == Vector2.zero)
         {
             _wanderTarget = new Vector2(Random.Range(wanderLeftPoint.x, wanderLeftPoint.x + wanderDistanceRight), wanderLeftPoint.y);
+            animator.SetBool("isWalking", true);
         }
         else if (Mathf.Abs(transform.position.x - _wanderTarget.x) > 0.2)
         {
             if (transform.position.x < _wanderTarget.x)
             {
-                //transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale = new Vector3(-1, 1, 1);
                 transform.position += moveSpeed * Time.deltaTime * Vector3.right;
             }
             if (transform.position.x > _wanderTarget.x)
             {
-                //transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(1, 1, 1);
                 transform.position += moveSpeed * Time.deltaTime * Vector3.left;
             }
         }
@@ -92,10 +98,12 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
         {
             ChangeState(EnemyState.IDLE);
             _wanderTarget = Vector2.zero;
+            animator.SetBool("isWalking", false);
         }
         if (IsPlayerSpottable())
         {
             ChangeState(EnemyState.SPOTTED);
+            animator.SetBool("isWalking", false);
         }
     }
     protected abstract void SpotAction();
@@ -112,8 +120,10 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     protected IEnumerator Idle(float waitTime, float waitVariation)
     {
         _isWaiting = true;
+        animator.SetBool("isIdle", true);
         yield return new WaitForSeconds(waitTime + Random.Range(0, waitVariation));
         ChangeState(EnemyState.WANDER);
+        animator.SetBool("isIdle", false);
         _isWaiting = false;
     }
 

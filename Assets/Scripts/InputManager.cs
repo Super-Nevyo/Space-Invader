@@ -24,6 +24,5 @@ public class InputManager : MonoBehaviour
     {
         MoveEvent?.Invoke(value.Get<float>());
         AnyInputEvent?.Invoke();
-        Debug.Log(value.Get<float>());
     }
 }

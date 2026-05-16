@@ -7,13 +7,16 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float JumpStrength;
     [SerializeField] private float raycastStartDown;
     [SerializeField] private float raycastDistance;
+    [SerializeField] private int _hp;
     private Rigidbody2D rb;
 
     private float _moveDirection;
+    private bool _alive = true;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        Debug.Log(LayerMask.GetMask("Player"));
     }
     void OnEnable()
     {
@@ -33,12 +36,15 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        rb.linearVelocity = new Vector2(_moveDirection * MoveSpeed, rb.linearVelocityY);
+        if (_alive)
+        {
+            rb.linearVelocity = new Vector2(_moveDirection * MoveSpeed, rb.linearVelocityY);
+        }
     }
 
     private void HandleJump()
     {
-        if (IsGrounded())
+        if (IsGrounded() && _alive)
         {
             rb.linearVelocityY += JumpStrength;
         }
@@ -55,5 +61,14 @@ public class PlayerActions : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics2D.Raycast(transform.position + raycastStartDown * Vector3.down, Vector2.down, raycastDistance, LayerMask.GetMask("Ground"));
+    }
+    public void TakeDamage(int damage)
+    {
+        _hp -= damage;
+        Debug.Log("Hit for " + damage);
+        if (_hp <= 0)
+        {
+            _alive = false;
+        }
     }
 }
