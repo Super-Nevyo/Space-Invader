@@ -33,13 +33,11 @@ public class MeleeEnemy : BaseEnemy
     {
         if (transform.position.x + 1 < _player.transform.position.x)
         {
-            animator.SetBool("isWalking", true);
             transform.localScale = new Vector3(-1, 1, 1);
             transform.position += moveSpeed * Time.deltaTime * Vector3.right;
         }
         else if (transform.position.x - 1 > _player.transform.position.x)
         {
-            animator.SetBool("isWalking", true);
             transform.localScale = new Vector3(1, 1, 1);
             transform.position += moveSpeed * Time.deltaTime * Vector3.left;
         }
@@ -62,6 +60,7 @@ public class MeleeEnemy : BaseEnemy
         ChangeState(EnemyState.CHASING);
         animator.SetBool("isIdle", false);
         animator.SetBool("isAttacking", false);
+        animator.SetBool("isWalking", true);
     }
 
     private IEnumerator FullAttack()

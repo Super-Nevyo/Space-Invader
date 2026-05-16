@@ -8,6 +8,7 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float raycastStartDown;
     [SerializeField] private float raycastDistance;
     [SerializeField] private int _hp;
+    [SerializeField] public System.Action ShootEvent;
     private Rigidbody2D rb;
 
     private float _moveDirection;
@@ -24,7 +25,7 @@ public class PlayerActions : MonoBehaviour
         // listening to the input manager for the key presses
         inputManager.JumpEvent += HandleJump;
         inputManager.MoveEvent += HandleMove;
-        //inputManager.ShootEvent += HandleShoot;
+        inputManager.ShootEvent += HandleShoot;
         
     }
     void OnDisable()
@@ -32,7 +33,7 @@ public class PlayerActions : MonoBehaviour
         // stopping listening to the input manager
         inputManager.JumpEvent -= HandleJump;
         inputManager.MoveEvent -= HandleMove;
-        //inputManager.ShootEvent -= HandleShoot;
+        inputManager.ShootEvent -= HandleShoot;
     }
 
     void Update()
@@ -70,10 +71,10 @@ public class PlayerActions : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
     }
-    //private void HandleShoot()
-    //{
-
-    //}
+    private void HandleShoot()
+    {
+        ShootEvent?.Invoke();
+    }
 
     private bool IsGrounded()
     {

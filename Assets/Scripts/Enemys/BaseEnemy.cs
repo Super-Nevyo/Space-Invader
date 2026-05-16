@@ -139,6 +139,10 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     {
         hitPoints -= Damage;
         StopAllCoroutines();
+        _isWaiting = false;
+        animator.SetBool("isIdle", true);
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isAttacking", false);
         if (hitPoints <= 0) ChangeState(EnemyState.DYING);
         else ChangeState(EnemyState.HIT);
     }
