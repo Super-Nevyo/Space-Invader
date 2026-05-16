@@ -12,13 +12,11 @@ public class InputManager : MonoBehaviour
     {
         JumpEvent?.Invoke();
         AnyInputEvent?.Invoke();
-        Debug.Log("Jump pressed");
     }
     public void OnShoot()
     {
         ShootEvent?.Invoke();
         AnyInputEvent?.Invoke();
-        Debug.Log("Shoot pressed");
     }
     public void OnMove(InputValue value)
     {

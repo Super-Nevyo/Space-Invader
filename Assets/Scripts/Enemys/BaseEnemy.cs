@@ -16,6 +16,7 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     [SerializeField] protected float staggerTime;
     [SerializeField] protected float attackTime;
     [SerializeField] protected int damage;
+    [SerializeField] protected bool randomizeStats;
     protected bool _isWaiting;
     private Vector2 _wanderTarget =  Vector2.zero;
     private EnemyState _currentState;
@@ -33,6 +34,7 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     protected void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
+        if(randomizeStats) PickRandomStats();
     }
     private void FixedUpdate()
     {
@@ -139,6 +141,21 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
         StopAllCoroutines();
         if (hitPoints <= 0) ChangeState(EnemyState.DYING);
         else ChangeState(EnemyState.HIT);
+    }
+
+    public virtual void PickRandomStats()
+    {
+        maxHitPoints = Random.Range(4, 7);
+        sightDistance = Random.Range(5, 9);
+        idleTime = Random.Range(0.5f, 1.5f);
+        idleVariation = idleTime * Random.Range(0.9f, 1.1f);
+        wanderLeftPoint = transform.position;
+        wanderDistanceRight = Random.Range(3, 5);
+        moveSpeed = Random.Range(4f, 8f);
+        alertTime = Random.Range(0.5f, 2f);
+        staggerTime = Random.Range(0.1f, 1f);
+        attackTime = Random.Range(0f, 0.5f);
+        damage = 1;
     }
 
 }

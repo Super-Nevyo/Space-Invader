@@ -12,6 +12,7 @@ public class PlayerActions : MonoBehaviour
 
     private float _moveDirection;
     private bool _alive = true;
+    [SerializeField] private Animator anim;
 
     private void Start()
     {
@@ -23,7 +24,7 @@ public class PlayerActions : MonoBehaviour
         // listening to the input manager for the key presses
         inputManager.JumpEvent += HandleJump;
         inputManager.MoveEvent += HandleMove;
-        inputManager.ShootEvent += HandleShoot;
+        //inputManager.ShootEvent += HandleShoot;
         
     }
     void OnDisable()
@@ -31,7 +32,7 @@ public class PlayerActions : MonoBehaviour
         // stopping listening to the input manager
         inputManager.JumpEvent -= HandleJump;
         inputManager.MoveEvent -= HandleMove;
-        inputManager.ShootEvent -= HandleShoot;
+        //inputManager.ShootEvent -= HandleShoot;
     }
 
     void Update()
@@ -40,6 +41,8 @@ public class PlayerActions : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(_moveDirection * MoveSpeed, rb.linearVelocityY);
         }
+        if (!IsGrounded()) anim.SetBool("isAirborn", true);
+        if (IsGrounded()) anim.SetBool("isAirborn", false);
     }
 
     private void HandleJump()
@@ -52,11 +55,25 @@ public class PlayerActions : MonoBehaviour
     private void HandleMove(float direction)
     {
         _moveDirection = direction;
+        if (direction == 0)
+        {
+            anim.SetBool("isRunning", false);
+        }
+        else if (direction < 0)
+        {
+            anim.SetBool("isRunning", true);
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (direction > 0)
+        {
+            anim.SetBool("isRunning", true);
+            transform.localScale = new Vector3(1, 1, 1);
+        }
     }
-    private void HandleShoot()
-    {
+    //private void HandleShoot()
+    //{
 
-    }
+    //}
 
     private bool IsGrounded()
     {
@@ -65,10 +82,10 @@ public class PlayerActions : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _hp -= damage;
-        Debug.Log("Hit for " + damage);
         if (_hp <= 0)
         {
             _alive = false;
+            anim.SetBool("isRunning", false);
         }
     }
 }

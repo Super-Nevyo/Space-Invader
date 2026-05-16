@@ -73,9 +73,12 @@ public class MeleeEnemy : BaseEnemy
         yield return new WaitForSeconds(5f / 12f);
         _attacking = false;
         yield return new WaitForSeconds(3f / 12f);
-        _isWaiting = false;
-        ChangeState(EnemyState.CHASING);
         animator.SetBool("isAttacking", false);
+        animator.SetBool("isIdle", true);
+        yield return new WaitForSeconds(attackTime);
+        _isWaiting = false;
+        animator.SetBool("isIdle", false);
+        ChangeState(EnemyState.CHASING);
     }
     private void Attack()
     {
