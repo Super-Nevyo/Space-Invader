@@ -21,6 +21,7 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
     private Vector2 _wanderTarget =  Vector2.zero;
     private EnemyState _currentState;
     protected GameObject _player;
+    [SerializeField] protected int _value = 5;
 
 
     [SerializeField] protected Animator animator;
@@ -137,14 +138,18 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
 
     public virtual void OnHit(float Damage)
     {
-        hitPoints -= Damage;
-        StopAllCoroutines();
-        _isWaiting = false;
-        animator.SetBool("isIdle", true);
-        animator.SetBool("isWalking", false);
-        animator.SetBool("isAttacking", false);
-        if (hitPoints <= 0) ChangeState(EnemyState.DYING);
-        else ChangeState(EnemyState.HIT);
+        if (_currentState != EnemyState.DYING)
+        {
+            hitPoints -= Damage;
+            StopAllCoroutines();
+            _isWaiting = false;
+            animator.SetBool("isIdle", true);
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isAttacking", false);
+            if (hitPoints <= 0) { ChangeState(EnemyState.DYING); GameManager.instance.AddToScore(_value); Debug.Log(_value); }
+            else ChangeState(EnemyState.HIT);
+            
+        }
     }
 
     public virtual void PickRandomStats()
@@ -160,6 +165,7 @@ public abstract class BaseEnemy : MonoBehaviour, IHittable
         staggerTime = Random.Range(0.1f, 1f);
         attackTime = Random.Range(0f, 0.5f);
         damage = 1;
+        _value = 5;
     }
 
 }

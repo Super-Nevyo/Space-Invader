@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
@@ -8,7 +9,7 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float raycastStartDown;
     [SerializeField] private float raycastDistance;
     [SerializeField] private int _hp;
-    [SerializeField] public System.Action ShootEvent;
+    public System.Action ShootEvent;
     private Rigidbody2D rb;
 
     private float _moveDirection;
@@ -18,19 +19,20 @@ public class PlayerActions : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        Debug.Log(LayerMask.GetMask("Player"));
-    }
-    void OnEnable()
-    {
-        // listening to the input manager for the key presses
+        inputManager = GameManager.instance.GetComponent<InputManager>();
         inputManager.JumpEvent += HandleJump;
         inputManager.MoveEvent += HandleMove;
         inputManager.ShootEvent += HandleShoot;
+    }
+    void OnEnable()
+    {
+        //inputManager.JumpEvent += HandleJump;
+        //inputManager.MoveEvent += HandleMove;
+        //inputManager.ShootEvent += HandleShoot;
         
     }
     void OnDisable()
     {
-        // stopping listening to the input manager
         inputManager.JumpEvent -= HandleJump;
         inputManager.MoveEvent -= HandleMove;
         inputManager.ShootEvent -= HandleShoot;
@@ -55,6 +57,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void HandleMove(float direction)
     {
+        if (!_alive) return;
         _moveDirection = direction;
         if (direction == 0)
         {
@@ -73,6 +76,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void HandleShoot()
     {
+        if (!_alive) return;
         ShootEvent?.Invoke();
     }
 
@@ -87,6 +91,8 @@ public class PlayerActions : MonoBehaviour
         {
             _alive = false;
             anim.SetBool("isRunning", false);
+            GameManager.instance.EndTheGame();
         }
+        UIPlaying.instance.UpdateHP(_hp);
     }
 }

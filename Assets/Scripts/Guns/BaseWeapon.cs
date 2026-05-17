@@ -8,11 +8,13 @@ public class BaseWeapon : MonoBehaviour
     [SerializeField] protected Vector2 shootDirection;
     [SerializeField] protected float shootCooldown;
     [SerializeField] protected float damage;
+    [SerializeField] protected GameObject tracer;
 
     [SerializeField] private PlayerActions playerActions;
     protected RaycastHit2D[] hits = new RaycastHit2D[1];
     protected bool onCooldown = false;
     private IHittable _hittable;
+    private GameObject _tempTracer;
 
     private void OnEnable()
     {
@@ -27,15 +29,32 @@ public class BaseWeapon : MonoBehaviour
         if (!onCooldown)
         {
             StartCoroutine(ShootCooldown());
-            ShootAction();
+            if (playerActions.transform.localScale.x > 0)
+                ShootAction(new Vector2(transform.position.x, transform.position.y) + weaponStart, shootDirection, weaponRange);
+            else if (playerActions.transform.position.y < 0)
+                ShootAction(new Vector2(transform.position.x, transform.position.y) + weaponStart * new Vector2(-1, 1), shootDirection * new Vector2(-1, 1), weaponRange);
             if (hits[0].collider != null && hits.Length > 0)
-            foreach(RaycastHit2D hit in hits)
             {
-                 _hittable = hit.transform.GetComponent<IHittable>();
-                if (_hittable != null)
+                if (playerActions.transform.localScale.x > 0)
+                    CreateTracer(new Vector2(transform.position.x, transform.position.y) + weaponStart, hits[hits.Length - 1].point);
+                if (playerActions.transform.localScale.x < 0)
+                    CreateTracer(new Vector2(transform.position.x, transform.position.y) + weaponStart * new Vector2(-1, 1), hits[hits.Length - 1].point);
+                foreach (RaycastHit2D hit in hits)
                 {
-                    _hittable.OnHit(damage);
+                    _hittable = hit.transform.GetComponent<IHittable>();
+                    if (_hittable != null)
+                    {
+                        _hittable.OnHit(damage);
+                    }
                 }
+            }
+            else
+            {
+                if (playerActions.transform.localScale.x > 0)
+                    CreateTracer(new Vector2(transform.position.x, transform.position.y) + weaponStart, new Vector2(transform.position.x, transform.position.y) + weaponRange * shootDirection);
+                if (playerActions.transform.localScale.x < 0)
+                        CreateTracer(new Vector2(transform.position.x, transform.position.y) + weaponStart * new Vector2(-1, 1), new Vector2(transform.position.x, transform.position.y) + weaponRange * shootDirection * new Vector2(-1, 1));
+
             }
         }
     }
@@ -47,19 +66,20 @@ public class BaseWeapon : MonoBehaviour
         onCooldown = false;
     }
 
-    protected virtual void ShootAction()
+    protected virtual void ShootAction(Vector2 startPoint, Vector2 direction, float distance)
     {
-        if (playerActions.transform.localScale.x > 0)
-        {
-            hits = new RaycastHit2D[1] { Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + weaponStart, new Vector2(transform.position.x, transform.position.y) + shootDirection, weaponRange) };
-            Debug.DrawLine(new Vector2(transform.position.x, transform.position.y) + weaponStart, new Vector2(transform.position.x, transform.position.y) + weaponRange * shootDirection.normalized, Color.white, 0.1f);
-        }
-        if (playerActions.transform.localScale.x < 0)
-        {
-            hits = new RaycastHit2D[1] { Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y) + weaponStart * new Vector2(-1, 1), new Vector2(transform.position.x, transform.position.y) + shootDirection * new Vector2(-1, 1), weaponRange) };
-            Debug.Log(shootDirection * Vector2.left);
-            Debug.DrawLine(new Vector2(transform.position.x, transform.position.y) + weaponStart * new Vector2(-1,1), new Vector2(transform.position.x, transform.position.y) + weaponRange * shootDirection.normalized * new Vector2(-1, 1), Color.white, 0.1f);
-        }
+
+        hits = new RaycastHit2D[1] { Physics2D.Raycast(startPoint, direction, distance) };
+
     }    
+    protected virtual void CreateTracer(Vector2 startPoint, Vector2 hitPoint)
+    {
+        
+        Vector3 dir = new Vector3 (hitPoint.x - startPoint.x, hitPoint.y - startPoint.y, 0 );
+        Quaternion rot = Quaternion.Euler(0,0, Quaternion.LookRotation(dir, new Vector3 (0,0,-1)).eulerAngles.z);
+        _tempTracer = Instantiate(tracer, 0.5f * dir + new Vector3 (startPoint.x, startPoint.y, 0), rot , null);
+        _tempTracer.transform.localScale = new Vector3(1, dir.magnitude/4, 1);
+        Destroy(_tempTracer,0.1f);
+    }
 
 }

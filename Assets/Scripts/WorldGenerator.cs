@@ -6,7 +6,7 @@ public class WorldGenerator : MonoBehaviour
 {
     private List<GameObject>[] _world;
     private int _chunkDistance = 1;
-    private int _startDistance = -5;
+    private int _startDistance = -10;
     [SerializeField] private GameObject _tempContainer;
     [SerializeField] private GameObject floor;
     [SerializeField] private GameObject enemy;
@@ -46,9 +46,9 @@ public class WorldGenerator : MonoBehaviour
     private void PickASetAndSpawn()
     {
         int i = Random.Range(0, 3);
-        if (i == 0) { _world = _set1; Debug.Log("1"); }
-        if (i == 1) { _world = _set2; Debug.Log("2"); }
-        if (i == 2) { _world = _set3; Debug.Log("3"); }
+        if (i == 0) { _world = _set1; }
+        if (i == 1) { _world = _set2; }
+        if (i == 2) { _world = _set3; }
             SpawnObjects();
     }
 

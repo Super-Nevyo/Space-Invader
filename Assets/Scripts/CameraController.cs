@@ -38,7 +38,6 @@ public class CameraController : MonoBehaviour
 
     private void NewLeftBound(float NewBound)
     {
-        Debug.Log("Message Recieved");
         _camLeftBound = NewBound + _camStopDistance;
     }
     private IEnumerator EnableAfter()

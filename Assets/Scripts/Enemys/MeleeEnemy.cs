@@ -49,7 +49,8 @@ public class MeleeEnemy : BaseEnemy
 
     protected override void DieAction()
     {
-        Destroy(gameObject);
+        transform.localScale = new Vector3(0.1f, 0.1f, 1f);
+        Destroy(gameObject, 0.1f);
     }
 
     private IEnumerator WaitAndChase(float waitTime)
